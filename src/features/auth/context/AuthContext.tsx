@@ -10,7 +10,8 @@ const NAMES_CACHE_KEY = "@entrelinhas:registered_names";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Restore session from localStorage or sessionStorage on initial load
   useEffect(() => {
@@ -23,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Erro ao carregar sessão anterior:", err);
     } finally {
-      setIsLoading(false);
+      setIsInitialLoading(false);
     }
   }, []);
 
@@ -184,6 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         isAuthenticated: !!user,
         isLoading,
+        isInitialLoading,
         loginWithEmail,
         registerWithEmail,
         loginWithGoogle,

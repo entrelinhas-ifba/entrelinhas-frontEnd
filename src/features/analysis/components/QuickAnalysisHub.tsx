@@ -28,7 +28,6 @@ export function QuickAnalysisHub({ onScan, onItemClick }: QuickAnalysisHubProps)
         if (data && data.length > 0) {
           setSnippets(data);
         } else if (!isAuthenticated) {
-          // Em modo demonstração/visitante
           setSnippets(mockSnippets.slice(0, 2));
         } else {
           setSnippets([]);
@@ -48,90 +47,142 @@ export function QuickAnalysisHub({ onScan, onItemClick }: QuickAnalysisHubProps)
   }, [isAuthenticated]);
 
   return (
-    <div className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
-      <div className="mb-6 flex items-center gap-3.5">
-        <div className="w-12 h-12 rounded-2xl bg-white border border-blue-100 shadow-xs ring-2 ring-blue-50/80 flex items-center justify-center p-1.5 flex-shrink-0">
-          <img src="/logo.jpg" alt="EntreLinhas" className="w-full h-full object-contain rounded-lg" />
-        </div>
+    <div className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Editorial Section Header */}
+      <div className="mb-8 pb-5 border-b border-[#DCD5C9] flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h2 className="font-serif text-[22px] sm:text-[26px] font-bold text-[#1F2421]">Análise Rápida</h2>
-          <p className="text-[13px] text-[#6B7280] mt-0.5">Leitura imediata, intenção e síntese preliminar em segundos</p>
+          <span className="font-mono text-[11px] uppercase tracking-widest text-[#8C2D19] block mb-1">
+            Módulo Analítico · Modalidade 01
+          </span>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1816]">
+            Leitura Rápida
+          </h2>
+          <p className="font-sans text-[13px] text-[#5A5348] mt-1 max-w-xl leading-relaxed">
+            Extração tipográfica objetiva, síntese das ideias estruturantes e detecção da intenção discursiva em segundos.
+          </p>
+        </div>
+
+        <div className="hidden sm:block text-right">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-[#7D7567] block">
+            Cadência de Processamento
+          </span>
+          <span className="font-mono text-[12px] font-semibold text-[#1A1816]">
+            Fluxo Contínuo · Tesseract & Ollama
+          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-        {/* Call to action */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-start">
+        {/* Editorial Action Plate */}
         <div className="md:col-span-6">
-          <button
-            onClick={onScan}
-            className="w-full bg-white rounded-2xl border-2 border-dashed border-[#1D4ED8]/40 hover:border-[#1D4ED8] p-8 flex flex-col items-center gap-3 shadow-sm hover:shadow-md transition-all text-center group cursor-pointer"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-[#EFF6FF] group-hover:scale-105 transition-transform flex items-center justify-center">
-              <span className="text-3xl">⚡</span>
+          <div className="bg-[#FDFCF9] border border-[#DCD5C9] p-6 sm:p-8 relative">
+            {/* Viewfinder Crop Marks */}
+            <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#1A1816]" />
+            <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#1A1816]" />
+            <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#1A1816]" />
+            <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#1A1816]" />
+
+            <div className="text-center py-4">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-[#7D7567] block mb-2">
+                Entrada Óptica de Texto
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1A1816]">
+                Fotografar Página Impressa
+              </h3>
+              <p className="font-sans text-[13px] text-[#5A5348] mt-2 max-w-sm mx-auto leading-relaxed">
+                Aponte a câmera para qualquer parágrafo de prosa ou ensaio para decodificar e resumir o texto imediatamente.
+              </p>
+
+              <div className="mt-6 pt-5 border-t border-[#EFECE6] flex flex-col items-center gap-3">
+                <button
+                  onClick={onScan}
+                  className="w-full sm:w-auto px-6 py-3 bg-[#1A1816] hover:bg-[#2D2A26] text-[#F7F5F0] font-mono text-[12px] uppercase tracking-wider font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2.5 shadow-xs"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+                    <path
+                      d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2m12-16h-2a2 2 0 00-2 2v0m4 12v-2a2 2 0 00-2-2h0"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span>Abrir Câmera de Leitura</span>
+                </button>
+
+                <p className="text-[11px] font-mono text-[#A8A196]">
+                  Permite carregar imagens salvas na galeria
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-serif text-[18px] font-semibold text-[#1F2421]">Iniciar Nova Análise Rápida</p>
-              <p className="text-[12px] text-[#9CA3AF] mt-1">Clique para fotografar ou carregar um trecho</p>
-            </div>
-            <div className="mt-2 px-4 py-2 rounded-xl bg-[#1D4ED8] text-white text-[13px] font-semibold">
-              Capturar Agora
-            </div>
-          </button>
+          </div>
         </div>
 
-        {/* Recent Quick Analysis */}
+        {/* Recent Quick Analysis Registry */}
         <div className="md:col-span-6 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <p className="font-serif text-[16px] font-semibold text-[#1F2421]">Análises Rápidas Recentes</p>
+          <div className="flex items-center justify-between pb-2 border-b border-[#DCD5C9]">
+            <h3 className="font-serif text-base font-bold text-[#1A1816]">
+              Fichas Recentes no Arquivo
+            </h3>
             {snippets.length > 0 && (
-              <span className="text-[11px] text-[#9CA3AF] font-medium">{snippets.length} recente(s)</span>
+              <span className="font-mono text-[10px] uppercase text-[#7D7567]">
+                {snippets.length} registro(s)
+              </span>
             )}
           </div>
 
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2].map((i) => (
-                <div key={i} className="bg-white rounded-2xl border border-[#E5E7EB] p-4 animate-pulse">
-                  <div className="h-4 bg-[#F3F2EE] rounded w-1/3 mb-2" />
-                  <div className="h-3 bg-[#E5E7EB] rounded w-3/4 mb-3" />
-                  <div className="h-2.5 bg-[#F3F2EE] rounded w-1/4" />
+                <div key={i} className="bg-[#FDFCF9] border border-[#DCD5C9] p-4 animate-pulse">
+                  <div className="h-3 bg-[#EFECE6] w-1/3 mb-2" />
+                  <div className="h-4 bg-[#EFECE6] w-3/4 mb-3" />
+                  <div className="h-2.5 bg-[#EFECE6] w-1/4" />
                 </div>
               ))}
             </div>
           ) : snippets.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-dashed border-[#BFDBFE] p-6 text-center flex flex-col items-center justify-center gap-2">
-              <span className="text-2xl">⚡</span>
-              <p className="text-[13px] font-semibold text-[#1F2421]">Nenhuma análise rápida recente</p>
-              <p className="text-[11px] text-[#6B7280] max-w-xs leading-relaxed">
-                Fotografe uma página usando o botão ao lado para fazer sua primeira análise concisa.
+            <div className="bg-[#FDFCF9] border border-dashed border-[#DCD5C9] p-7 text-center">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-[#7D7567] block mb-1">
+                Arquivo Vazio
+              </span>
+              <p className="font-serif text-base font-semibold text-[#1A1816]">
+                Nenhuma leitura rápida registrada
+              </p>
+              <p className="text-[12px] text-[#5A5348] mt-1.5 max-w-xs mx-auto leading-relaxed">
+                Fotografe um excerto usando a placa de leitura ao lado para gerar sua primeira ficha analítica.
               </p>
             </div>
           ) : (
-            snippets.map((s) => (
+            snippets.map((s, idx) => (
               <div
                 key={s.id}
                 onClick={onItemClick}
-                className={`bg-white rounded-2xl border border-[#E5E7EB] p-4 shadow-sm transition-all ${
-                  onItemClick ? "hover:border-[#BFDBFE] hover:shadow-md cursor-pointer" : ""
+                className={`bg-[#FDFCF9] border border-[#DCD5C9] p-4 sm:p-5 transition-colors ${
+                  onItemClick ? "hover:border-[#8C2D19] cursor-pointer" : ""
                 }`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[13px] font-semibold text-[#1F2421] truncate">{s.author}</p>
-                  <span
-                    className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                    style={{ background: s.color, color: s.accent }}
-                  >
-                    ⚡ Rápida
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-[#8C2D19] block">
+                      Ficha {String(idx + 1).padStart(2, "0")} · {s.author}
+                    </span>
+                    <p className="font-serif text-[15px] font-semibold text-[#1A1816] mt-0.5 line-clamp-2 leading-snug">
+                      "{s.title}"
+                    </p>
+                  </div>
+                  <span className="font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 bg-[#EFECE6] text-[#1A1816] border border-[#DCD5C9] shrink-0">
+                    Rápida
                   </span>
                 </div>
-                <p className="text-[12px] text-[#6B7280] line-clamp-2 leading-relaxed">{s.title}</p>
-                <div className="flex items-center gap-2 mt-3 pt-2 border-t border-[#F0EFE9] text-[11px] text-[#9CA3AF]">
+
+                <div className="flex flex-wrap items-center gap-2 mt-3 pt-2.5 border-t border-[#EFECE6] text-[11px] font-mono text-[#7D7567]">
                   <span>{s.date}</span>
-                  <span>•</span>
-                  <span style={{ color: s.accent }} className="font-medium truncate">
+                  <span>·</span>
+                  <span className="text-[#8C2D19] font-medium uppercase truncate max-w-[150px]">
                     {s.intent}
                   </span>
-                  <span>•</span>
+                  <span>·</span>
                   <span>{s.words} palavras</span>
                 </div>
               </div>

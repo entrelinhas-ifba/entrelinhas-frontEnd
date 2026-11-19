@@ -63,7 +63,7 @@ export async function apiClient<T>(endpoint: string, config: RequestConfig = {})
     }
 
     if (!response.ok) {
-      if (response.status === 401 && typeof window !== "undefined") {
+      if (response.status === 401 && !url.includes("/auth/login") && typeof window !== "undefined") {
         window.dispatchEvent(new CustomEvent("unauthorized"));
       }
       const errorText = await response.text().catch(() => "");
@@ -75,8 +75,15 @@ export async function apiClient<T>(endpoint: string, config: RequestConfig = {})
         else if (errorJson.message) errorMessage = errorJson.message;
         else if (errorJson.error) errorMessage = errorJson.error;
       } catch {
-        if (errorText) errorMessage = errorText;
+        if (errorText && !errorText.includes("<!DOCTYPE") && !errorText.includes("<html")) {
+          errorMessage = errorText;
+        }
       }
+
+      if (response.status === 401 && (!errorMessage || errorMessage.startsWith("Erro HTTP"))) {
+        errorMessage = "E-mail ou senha inválidos.";
+      }
+
       throw new AppError(errorMessage, response.status);
     }
 

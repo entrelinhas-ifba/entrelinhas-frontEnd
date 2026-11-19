@@ -21,7 +21,7 @@ export function ForgotPasswordModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
-      setErrorMessage("Por favor, digite um e-mail válido.");
+      setErrorMessage("Por favor, informe um endereço de e-mail válido.");
       return;
     }
     setErrorMessage("");
@@ -30,7 +30,7 @@ export function ForgotPasswordModal({
     setTimeout(() => {
       setIsSubmitting(false);
       setSentSuccess(true);
-    }, 700);
+    }, 600);
   };
 
   const handleReset = () => {
@@ -39,20 +39,16 @@ export function ForgotPasswordModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 max-w-md w-full overflow-hidden p-6">
-        <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-gray-900 text-lg">Recuperar Senha</h3>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+      <div className="bg-[#FDFCF9] border border-[#DCD5C9] shadow-md max-w-md w-full overflow-hidden p-6 sm:p-7">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DCD5C9]">
+          <h3 className="font-serif text-lg font-bold text-[#1A1816]">
+            Recuperação de Acesso
+          </h3>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-md cursor-pointer"
+            className="text-[#7D7567] hover:text-[#1A1816] font-mono text-[14px] p-1 cursor-pointer"
+            title="Fechar"
           >
             ✕
           </button>
@@ -60,67 +56,69 @@ export function ForgotPasswordModal({
 
         {sentSuccess ? (
           <div className="py-6 text-center space-y-3">
-            <div className="w-12 h-12 rounded-full bg-green-100 text-green-600 mx-auto flex items-center justify-center text-xl">
+            <div className="w-10 h-10 border border-[#2D6A4F] bg-[#EDF5F0] text-[#2D6A4F] mx-auto flex items-center justify-center text-lg font-mono">
               ✓
             </div>
-            <h4 className="font-semibold text-gray-900 text-base">E-mail Enviado!</h4>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Enviamos um link com instruções para redefinir sua senha para:
+            <h4 className="font-serif font-bold text-[#1A1816] text-base">
+              Instruções Enviadas
+            </h4>
+            <p className="text-[13px] text-[#5A5348] leading-relaxed">
+              Encaminhamos o procedimento de redefinição para:
               <br />
-              <strong className="text-gray-800">{email}</strong>
+              <strong className="text-[#1A1816] font-mono text-[12px]">{email}</strong>
             </p>
-            <p className="text-xs text-gray-400">Verifique também sua pasta de spam ou lixo eletrônico.</p>
+            <p className="text-[11px] text-[#7D7567]">
+              Caso não localize em instantes, confira a caixa de spam ou lixo eletrônico.
+            </p>
             <div className="pt-3">
               <button
                 onClick={handleReset}
-                className="w-full py-2.5 px-4 bg-[#1D4ED8] hover:bg-[#1E40AF] text-white font-medium rounded-xl text-sm transition-colors cursor-pointer"
+                className="w-full py-2.5 px-4 bg-[#1A1816] hover:bg-[#2D2A26] text-[#F7F5F0] font-mono uppercase tracking-wider text-[11px] font-semibold transition-colors cursor-pointer"
               >
-                Voltar para o Login
+                Retornar ao Login
               </button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="py-4 space-y-4">
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Digite seu endereço de e-mail cadastrado no <strong>EntreLinhas</strong> para receber o link de redefinição de senha.
+            <p className="text-[13px] text-[#5A5348] leading-relaxed">
+              Digite o e-mail cadastrado no <strong>EntreLinhas</strong> para receber as instruções de recuperação de senha.
             </p>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                E-mail de cadastro
+              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#7D7567] mb-1">
+                E-mail cadastrado
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu.email@exemplo.com"
+                placeholder="leitor@exemplo.com"
                 required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D4ED8] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                className="w-full px-3.5 py-2.5 bg-[#FAF9F5] border border-[#DCD5C9] text-[14px] text-[#1A1816] placeholder:text-[#A8A196] focus:outline-none focus:border-[#8C2D19] focus:bg-[#FDFCF9] transition-colors"
               />
             </div>
 
             {errorMessage && (
-              <p className="text-xs text-red-500 font-medium">{errorMessage}</p>
+              <div className="p-2.5 bg-[#FAF0ED] border-l-2 border-[#8C2D19] text-[#8C2D19] text-[12px]">
+                {errorMessage}
+              </div>
             )}
 
             <div className="flex gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2.5 px-4 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors cursor-pointer"
+                className="flex-1 py-2.5 px-4 border border-[#DCD5C9] bg-[#FAF9F5] hover:bg-[#EFECE6] text-[#5A5348] font-mono uppercase tracking-wider text-[11px] font-medium transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 py-2.5 px-4 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="flex-1 py-2.5 px-4 bg-[#8C2D19] hover:bg-[#732414] text-[#F7F5F0] font-mono uppercase tracking-wider text-[11px] font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
               >
-                {isSubmitting ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  "Enviar Link"
-                )}
+                {isSubmitting ? "Enviando..." : "Enviar Instruções"}
               </button>
             </div>
           </form>

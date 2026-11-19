@@ -97,82 +97,98 @@ export function HomeScreen({
   };
 
   return (
-    <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
-      {/* Brand Greeting Hero Banner */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gradient-to-r from-white via-white to-blue-50/40 border border-[#E5E7EB] rounded-3xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
-        {/* Decorative background watermark */}
-        <div className="absolute -right-8 -bottom-8 w-44 h-44 opacity-[0.04] pointer-events-none">
-          <img src="/logo.jpg" alt="" className="w-full h-full object-contain" />
-        </div>
-
-        <div className="flex items-center gap-4 sm:gap-6 z-10">
-          <div className="w-18 h-18 sm:w-22 sm:h-22 rounded-2xl bg-white border border-blue-100 shadow-md ring-4 ring-blue-50/80 flex items-center justify-center p-2 flex-shrink-0 transition-transform duration-300 hover:scale-105">
-            <img src="/logo.jpg" alt="EntreLinhas" className="w-full h-full object-contain rounded-xl" />
-          </div>
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200/70 text-[#1D4ED8] text-[11px] font-semibold mb-1">
-              <span>✦</span>
-              <span>Inteligência Contextual Literária</span>
+    <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+      {/* Frontispiece / Editorial Header */}
+      <section className="mb-8 border-b border-[#DCD5C9] pb-6 sm:pb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-2 mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[#8C2D19]">
+              <span>Caderno de Leitura</span>
+              <span>—</span>
+              <span>{user && user.provider !== "guest" ? user.name : "Leitor Visitante"}</span>
             </div>
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1F2421] tracking-tight">
-              {user && user.provider !== "guest" ? `Olá, ${user.name.split(" ")[0]}!` : "Bem-vindo ao EntreLinhas"}
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-[42px] font-normal leading-[1.15] text-[#1A1816] tracking-tight">
+              Análise literária e leitura nas <span className="italic font-serif">entrelinhas</span>.
             </h2>
-            <p className="text-xs sm:text-sm text-[#6B7280] mt-0.5 max-w-xl leading-relaxed">
-              Mais que palavras, significados. Analise e interprete textos literários com inteligência contextual.
+            <p className="mt-3 text-sm sm:text-[15px] text-[#666055] leading-relaxed max-w-xl">
+              Digitalize páginas impressas para extrair temas, intenções autorais,
+              figuras de linguagem e notas históricas do texto.
             </p>
           </div>
-        </div>
-      </div>
 
-      {/* Responsive 2-Column Grid on Tablet/Desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start">
-        {/* Left Column: Mode Selector & Capture Zone */}
-        <div className="md:col-span-5 flex flex-col gap-5">
-          {/* Mode Selector */}
-          <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden">
-            <div className="flex p-1 gap-1 bg-[#F3F2EE] m-3.5 rounded-xl">
+          {/* Monthly Digest Badge */}
+          <div className="flex md:flex-col items-baseline md:items-end gap-4 md:gap-1 pt-4 md:pt-0 border-t md:border-t-0 border-[#DCD5C9]">
+            <div className="text-left md:text-right">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#666055] block">
+                Páginas no Mês
+              </span>
+              <span className="font-mono text-2xl font-semibold text-[#1A1816]">
+                {isLoadingData ? "—" : stats.paginasEsteMes}
+              </span>
+            </div>
+            <div className="text-left md:text-right">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-[#666055] block">
+                Palavras Analisadas
+              </span>
+              <span className="font-mono text-base font-medium text-[#8C2D19]">
+                {isLoadingData ? "—" : stats.palavrasAnalisadas.toLocaleString("pt-BR")}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Workspace Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+        {/* Left Column: Capture Chamber */}
+        <div className="md:col-span-5 flex flex-col gap-6">
+          {/* Method Selector Tabs */}
+          <div className="bg-[#FDFCF9] border border-[#DCD5C9] p-1">
+            <div className="grid grid-cols-2 gap-1 font-mono text-xs uppercase tracking-wider">
               <button
+                type="button"
                 onClick={() => setMode("rapida")}
-                className={`flex-1 py-2.5 px-3 rounded-lg text-[12px] font-medium transition-all duration-200 cursor-pointer ${
+                className={`py-2.5 px-3 transition-colors text-center cursor-pointer ${
                   mode === "rapida"
-                    ? "bg-white shadow-sm text-[#1F2421] font-semibold"
-                    : "text-[#6B7280] hover:text-[#1F2421]"
+                    ? "bg-[#1A1816] text-[#F7F5F0] font-medium"
+                    : "text-[#666055] hover:text-[#1A1816] hover:bg-[#EFECE4]"
                 }`}
               >
-                ⚡ Análise Rápida
+                01. Leitura Rápida
               </button>
               <button
+                type="button"
                 onClick={() => setMode("aprofundada")}
-                className={`flex-1 py-2.5 px-3 rounded-lg text-[12px] font-medium transition-all duration-200 cursor-pointer ${
+                className={`py-2.5 px-3 transition-colors text-center cursor-pointer ${
                   mode === "aprofundada"
-                    ? "bg-white shadow-sm text-[#1F2421] font-semibold"
-                    : "text-[#6B7280] hover:text-[#1F2421]"
+                    ? "bg-[#1A1816] text-[#F7F5F0] font-medium"
+                    : "text-[#666055] hover:text-[#1A1816] hover:bg-[#EFECE4]"
                 }`}
               >
-                🔍 Aprofundada
+                02. Aprofundada
               </button>
             </div>
-            <div className="px-4 pb-4">
+            <div className="p-3 text-[12px] text-[#666055] leading-relaxed border-t border-[#DCD5C9] mt-1 bg-[#F7F5F0]">
               {mode === "rapida" ? (
-                <div>
-                  <p className="text-[13px] font-semibold text-[#1F2421]">Análise Rápida</p>
-                  <p className="text-[12px] text-[#6B7280] mt-1 leading-relaxed">
-                    Leitura direta, tema central, intenção preliminar e resumo conciso em segundos.
-                  </p>
-                </div>
+                <p>
+                  <strong className="text-[#1A1816] font-medium font-mono text-[11px] uppercase tracking-wide block mb-0.5">
+                    Modo Rápido
+                  </strong>
+                  Extração OCR, tema central, intenção preliminar e síntese textual imediata.
+                </p>
               ) : (
-                <div>
-                  <p className="text-[13px] font-semibold text-[#1F2421]">Análise Aprofundada</p>
-                  <p className="text-[12px] text-[#6B7280] mt-1 leading-relaxed">
-                    Detecção semântica completa, notas históricas, figuras de linguagem e tradução anotada.
-                  </p>
-                </div>
+                <p>
+                  <strong className="text-[#1A1816] font-medium font-mono text-[11px] uppercase tracking-wide block mb-0.5">
+                    Modo Crítico Aprofundado
+                  </strong>
+                  Mapeamento de figuras de linguagem, notas contextuais históricas e tradução integral.
+                </p>
               )}
             </div>
           </div>
 
-          {/* Capture Card */}
-          <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-5">
+          {/* Capture Workspace */}
+          <div className="bg-[#FDFCF9] border border-[#DCD5C9] p-5 sm:p-6">
             <input
               ref={fileInputRef}
               type="file"
@@ -180,11 +196,13 @@ export function HomeScreen({
               className="hidden"
               onChange={handleFileChange}
             />
+
+            {/* Droppable Plate */}
             <div
-              className={`border-2 border-dashed rounded-2xl p-6 sm:p-8 flex flex-col items-center gap-3 mb-4 transition-all cursor-pointer ${
+              className={`border border-dashed transition-all p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer ${
                 isDragging
-                  ? "border-[#1D4ED8] bg-[#EFF6FF] scale-[1.01]"
-                  : "border-[#BFDBFE] hover:border-[#1D4ED8] bg-[#FBFBFA]"
+                  ? "border-[#8C2D19] bg-[#F6EDE9]"
+                  : "border-[#C9C2B5] hover:border-[#1A1816] bg-[#F7F5F0]"
               }`}
               onClick={onCapture}
               onDragOver={(e) => {
@@ -194,124 +212,128 @@ export function HomeScreen({
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
             >
-              <div className="w-16 h-16 bg-[#EFF6FF] rounded-2xl flex items-center justify-center shadow-sm">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="3" width="18" height="18" rx="2" stroke="#1D4ED8" strokeWidth="1.8" />
-                  <circle cx="12" cy="12" r="4" stroke="#1D4ED8" strokeWidth="1.8" />
-                  <path d="M8 3H5a2 2 0 00-2 2v3M16 3h3a2 2 0 012 2v3M8 21H5a2 2 0 01-2-2v-3M16 21h3a2 2 0 002-2v-3" stroke="#1D4ED8" strokeWidth="1.4" />
+              {/* Sight / Scanner Frame Mark */}
+              <div className="w-14 h-14 border border-[#8C2D19] flex items-center justify-center mb-3 bg-[#FDFCF9] relative">
+                <span className="absolute -top-1 -left-1 w-2 h-2 border-t-2 border-l-2 border-[#8C2D19]" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 border-t-2 border-r-2 border-[#8C2D19]" />
+                <span className="absolute -bottom-1 -left-1 w-2 h-2 border-b-2 border-l-2 border-[#8C2D19]" />
+                <span className="absolute -bottom-1 -right-1 w-2 h-2 border-b-2 border-r-2 border-[#8C2D19]" />
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8C2D19">
+                  <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" strokeWidth="1.6" />
+                  <line x1="8" y1="12" x2="16" y2="12" strokeWidth="1.6" />
+                  <line x1="12" y1="8" x2="12" y2="16" strokeWidth="1.6" />
                 </svg>
               </div>
-              <div className="text-center">
-                <p className="font-serif text-[16px] font-semibold text-[#1F2421]">Capturar Página de Livro</p>
-                <p className="text-[12px] text-[#9CA3AF] mt-0.5">Posicione o livro sob boa iluminação ou arraste uma foto</p>
-              </div>
+
+              <h3 className="font-serif text-lg font-medium text-[#1A1816]">
+                Capturar Página Impressa
+              </h3>
+              <p className="font-mono text-[11px] text-[#666055] mt-1 uppercase tracking-wider">
+                Fotografe sob luz uniforme ou solte o arquivo aqui
+              </p>
             </div>
-            <button
-              onClick={onCapture}
-              className="w-full py-3.5 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-[14px] font-semibold tracking-wide flex items-center justify-center gap-2 active:opacity-90 transition-all shadow-md shadow-blue-200 cursor-pointer"
-            >
-              <span>📷</span> Fotografar Página
-            </button>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full mt-2.5 py-3 rounded-xl border border-[#E5E7EB] hover:bg-[#F3F2EE] text-[#2B2F2D] text-[13px] font-medium flex items-center justify-center gap-2 active:opacity-70 transition-colors cursor-pointer"
-            >
-              <span>🖼️</span> Escolher da Galeria
-            </button>
+
+            {/* Actions */}
+            <div className="mt-4 flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={onCapture}
+                className="w-full py-3 px-4 bg-[#8C2D19] hover:bg-[#702212] text-[#F7F5F0] font-mono text-xs uppercase tracking-widest font-medium transition-colors cursor-pointer flex items-center justify-center gap-2"
+              >
+                <span>Abrir Câmera</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full py-2.5 px-4 bg-transparent hover:bg-[#EFECE4] text-[#1A1816] border border-[#DCD5C9] font-mono text-xs uppercase tracking-widest transition-colors cursor-pointer"
+              >
+                Carregar Imagem da Galeria
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Recentes & Destaques Literários */}
+        {/* Right Column: Recent Readings Ledger */}
         <div className="md:col-span-7 flex flex-col gap-6">
-          {/* Recent Snippets */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h2 className="font-serif text-[18px] font-semibold text-[#1F2421]">Trechos Recentes</h2>
-                <p className="text-[11px] text-[#9CA3AF]">Últimas leituras e análises processadas</p>
-              </div>
-              <button
-                onClick={onViewAllHistory}
-                className="text-[12px] text-[#1D4ED8] hover:underline font-medium cursor-pointer"
-              >
-                Ver todos ({totalCount > 0 ? totalCount : snippets.length})
-              </button>
+          <div className="flex items-baseline justify-between border-b border-[#DCD5C9] pb-3">
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#8C2D19] block">
+                Arquivo de Leituras
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#1A1816]">
+                Trechos Analisados
+              </h3>
             </div>
+            <button
+              type="button"
+              onClick={onViewAllHistory}
+              className="font-mono text-xs text-[#8C2D19] hover:underline uppercase tracking-wider cursor-pointer"
+            >
+              Consultar Catálogo ({totalCount > 0 ? totalCount : snippets.length}) →
+            </button>
+          </div>
 
-            {/* Responsive Card Grid */}
-            {isLoadingData ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-2xl border border-[#E5E7EB] p-4 h-[160px] animate-pulse flex flex-col justify-between">
-                    <div className="h-14 bg-[#F3F2EE] rounded-xl" />
-                    <div>
-                      <div className="h-3 bg-[#E5E7EB] rounded w-3/4 mb-2" />
-                      <div className="h-2.5 bg-[#E5E7EB] rounded w-1/2" />
+          {/* Ledger List */}
+          {isLoadingData ? (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-5 border border-[#DCD5C9] bg-[#FDFCF9] animate-pulse">
+                  <div className="h-3 bg-[#EFECE4] w-24 mb-3" />
+                  <div className="h-4 bg-[#EFECE4] w-3/4 mb-2" />
+                  <div className="h-3 bg-[#EFECE4] w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : snippets.length === 0 ? (
+            <div className="p-8 border border-dashed border-[#DCD5C9] bg-[#FDFCF9] text-center">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#666055] block mb-1">
+                Catálogo Vazio
+              </span>
+              <p className="font-serif text-base text-[#1A1816]">
+                Nenhum trecho literário analisado até o momento.
+              </p>
+              <p className="text-xs text-[#666055] mt-1 max-w-sm mx-auto">
+                Utilize o módulo ao lado para fotografar a primeira página de estudo.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3.5">
+              {snippets.map((s, index) => (
+                <article
+                  key={s.id}
+                  onClick={onSnippetClick}
+                  className="group p-5 bg-[#FDFCF9] border border-[#DCD5C9] hover:border-[#1A1816] transition-all cursor-pointer text-left relative"
+                >
+                  {/* Top Meta Line */}
+                  <div className="flex items-center justify-between font-mono text-[11px] text-[#666055] mb-2.5">
+                    <span className="text-[#8C2D19] font-semibold">
+                      Ficha {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex items-center gap-3 uppercase tracking-wider">
+                      <span>{s.date}</span>
+                      <span>·</span>
+                      <span>{s.words} palavras</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : snippets.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-dashed border-[#BFDBFE] p-6 text-center flex flex-col items-center justify-center gap-2">
-                <span className="text-2xl">📖</span>
-                <p className="text-[13px] font-semibold text-[#1F2421]">Nenhum trecho analisado ainda</p>
-                <p className="text-[11px] text-[#6B7280] max-w-xs leading-relaxed">
-                  Fotografe ou escolha uma imagem de livro ao lado para iniciar sua primeira análise.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                {snippets.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={onSnippetClick}
-                    className="bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#BFDBFE] hover:shadow-md transition-all shadow-sm overflow-hidden text-left active:scale-[0.98] flex flex-col cursor-pointer"
-                  >
-                    <div
-                      className="h-[80px] w-full flex items-center justify-center p-3"
-                      style={{ background: s.bg || "#F3F2EE" }}
-                    >
-                      <div className="font-serif italic text-[11px] text-center leading-relaxed text-[#6B7280] line-clamp-3">
-                        "…{s.title}…"
-                      </div>
-                    </div>
-                    <div className="p-3.5 flex-1 flex flex-col justify-between">
-                      <div>
-                        <p className="text-[12px] font-semibold text-[#1F2421] truncate">{s.author}</p>
-                        <p className="text-[11px] text-[#6B7280] truncate mt-0.5">{s.title}</p>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <span
-                          className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium"
-                          style={{ background: s.color, color: s.accent }}
-                        >
-                          {s.intent}
-                        </span>
-                        <span className="text-[10px] text-[#9CA3AF]">{s.words} palavras</span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Reading insights card */}
-          <div className="grid grid-cols-2 gap-3 bg-white rounded-2xl border border-[#E5E7EB] p-4 shadow-xs">
-            <div className="text-center p-2 border-r border-[#F0EFE9]">
-              <p className="text-[18px] sm:text-[20px] font-bold text-[#1D4ED8]">
-                {isLoadingData ? "..." : stats.paginasEsteMes}
-              </p>
-              <p className="text-[11px] text-[#6B7280]">Páginas este mês</p>
+                  {/* Excerpt */}
+                  <blockquote className="font-serif italic text-[15px] sm:text-base text-[#1A1816] leading-relaxed mb-3 pl-3 border-l-2 border-[#8C2D19]">
+                    "{s.title}"
+                  </blockquote>
+
+                  {/* Footnotes / Intention */}
+                  <div className="flex items-center justify-between pt-2.5 border-t border-[#EFECE4] text-xs">
+                    <span className="font-mono text-[11px] text-[#666055] uppercase tracking-wide">
+                      {s.author}
+                    </span>
+                    <span className="font-mono text-[11px] text-[#1A1816] bg-[#EFECE4] px-2 py-0.5">
+                      {s.intent}
+                    </span>
+                  </div>
+                </article>
+              ))}
             </div>
-            <div className="text-center p-2">
-              <p className="text-[18px] sm:text-[20px] font-bold text-[#D97736]">
-                {isLoadingData ? "..." : stats.palavrasAnalisadas.toLocaleString("pt-BR")}
-              </p>
-              <p className="text-[11px] text-[#6B7280]">Palavras analisadas</p>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

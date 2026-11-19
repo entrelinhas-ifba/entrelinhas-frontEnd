@@ -106,12 +106,10 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
     }
   };
 
-  // Switch between front and back camera
   const toggleCameraFacing = () => {
     setFacingMode((prev) => (prev === "environment" ? "user" : "environment"));
   };
 
-  // Capture real photo from live video feed
   const capturePhoto = () => {
     if (shutterFlash) return;
     setShutterFlash(true);
@@ -140,7 +138,6 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
     }, 150);
   };
 
-  // Gallery select
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
@@ -156,7 +153,6 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
     e.target.value = "";
   };
 
-  // Native camera file fallback (when browser permissions are denied or unsupported)
   const handleNativeCameraFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
@@ -178,10 +174,10 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 select-none">
-      <div className="w-full h-full sm:h-auto sm:max-w-md sm:aspect-[3/4.2] bg-neutral-950 sm:rounded-3xl overflow-hidden relative flex flex-col shadow-2xl border border-white/10">
+    <div className="fixed inset-0 z-50 bg-[#141311] flex items-center justify-center p-0 sm:p-4 select-none">
+      <div className="w-full h-full sm:h-auto sm:max-w-md sm:aspect-[3/4.2] bg-[#1A1816] sm:border sm:border-[#3D3833] overflow-hidden relative flex flex-col shadow-2xl">
         
-        {/* Hidden inputs for gallery & native camera fallback */}
+        {/* Hidden inputs */}
         <input
           ref={fileInputRef}
           type="file"
@@ -200,86 +196,79 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
 
         {/* Shutter flash animation overlay */}
         {shutterFlash && (
-          <div className="absolute inset-0 bg-white z-50 transition-opacity duration-200 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#F7F5F0] z-50 transition-opacity duration-150 pointer-events-none" />
         )}
 
         {/* Screen flash light simulator */}
         {flash && (
-          <div className="absolute inset-0 bg-white/25 pointer-events-none z-10" />
+          <div className="absolute inset-0 bg-[#F7F5F0]/25 pointer-events-none z-10" />
         )}
 
         {/* Top Controls Bar */}
-        <div className="absolute top-0 left-0 right-0 z-30 pt-4 pb-3 px-4 flex items-center justify-between bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        <div className="absolute top-0 left-0 right-0 z-30 pt-4 pb-3 px-4 flex items-center justify-between bg-gradient-to-b from-[#141311]/90 to-transparent">
           <button
             onClick={handleBack}
-            className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/15 flex items-center justify-center hover:bg-black/80 transition-colors cursor-pointer text-white"
+            className="px-3 py-1.5 border border-[#4D4740] bg-[#24211D]/80 hover:bg-[#332F2A] transition-colors cursor-pointer text-[#F7F5F0] font-mono text-[11px] uppercase tracking-wider flex items-center gap-1.5"
             title="Voltar"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M19 12H5M12 5l-7 7 7 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
-            </svg>
+            <span>←</span>
+            <span>Fechar</span>
           </button>
 
-          <div
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold backdrop-blur-sm transition-colors duration-500 ${
-              cameraStatus === "active"
-                ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                : cameraStatus === "requesting"
-                ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                : "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-            }`}
-          >
+          <div className="flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border border-[#4D4740] bg-[#24211D]/80 text-[#DCD5C9]">
             <span
               className={`w-1.5 h-1.5 rounded-full ${
                 cameraStatus === "active"
-                  ? "bg-emerald-400 animate-pulse"
+                  ? "bg-[#2D6A4F]"
                   : cameraStatus === "requesting"
-                  ? "bg-blue-400 animate-ping"
-                  : "bg-amber-400"
+                  ? "bg-[#8C2D19] animate-pulse"
+                  : "bg-[#B46C20]"
               }`}
             />
-            {cameraStatus === "active"
-              ? "Câmera Ativa"
-              : cameraStatus === "requesting"
-              ? "Conectando..."
-              : "Sem Acesso à Câmera"}
+            <span>
+              {cameraStatus === "active"
+                ? "Sensor Óptico Ativo"
+                : cameraStatus === "requesting"
+                ? "Conectando..."
+                : "Sem Acesso"}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Flip camera if multiple cameras exist */}
             {hasMultipleCameras && (
               <button
                 onClick={toggleCameraFacing}
-                title="Inverter Câmera (Frontal / Traseira)"
-                className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/15 flex items-center justify-center hover:bg-black/80 transition-colors cursor-pointer"
+                title="Inverter Câmera"
+                className="w-8 h-8 border border-[#4D4740] bg-[#24211D]/80 flex items-center justify-center hover:bg-[#332F2A] transition-colors cursor-pointer text-[#F7F5F0]"
               >
-                <span className="text-[16px]">🔄</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 10c0-4.418-3.582-8-8-8s-8 3.582-8 8c0 1.5.4 2.9 1.1 4.1L3 16l4.5-.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M4 14c0 4.418 3.582 8 8 8s8-3.582 8-8c0-1.5-.4-2.9-1.1-4.1L21 8l-4.5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
               </button>
             )}
 
-            {/* Torch / Flash button */}
             <button
               onClick={toggleFlash}
-              title="Alternar Flash"
-              className={`w-10 h-10 rounded-full backdrop-blur-sm border flex items-center justify-center transition-colors cursor-pointer ${
-                flash ? "bg-amber-400/40 border-amber-400" : "bg-black/50 border-white/15"
+              title="Iluminação / Flash"
+              className={`w-8 h-8 border flex items-center justify-center transition-colors cursor-pointer ${
+                flash ? "bg-[#B46C20] border-[#B46C20] text-white" : "border-[#4D4740] bg-[#24211D]/80 text-[#F7F5F0]"
               }`}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                 <polygon
                   points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
-                  stroke={flash ? "#FCD34D" : "white"}
+                  stroke="currentColor"
                   strokeWidth="2"
-                  fill={flash ? "#FCD34D" : "none"}
+                  fill={flash ? "currentColor" : "none"}
                 />
               </svg>
             </button>
           </div>
         </div>
 
-        {/* Live Camera Viewfinder or Fallback View */}
-        <div className="absolute inset-0 bg-neutral-950 flex items-center justify-center overflow-hidden">
-          {/* Live Video Feed */}
+        {/* Live Camera Viewfinder */}
+        <div className="absolute inset-0 bg-[#141311] flex items-center justify-center overflow-hidden">
           <video
             ref={videoRef}
             autoPlay
@@ -290,38 +279,37 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
             }`}
           />
 
-          {/* Fallback & Loading states */}
           {cameraStatus === "requesting" && (
-            <div className="flex flex-col items-center gap-3 p-6 text-center text-white z-10">
-              <div className="w-10 h-10 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-              <p className="text-[13px] font-medium">Iniciando câmera do dispositivo...</p>
-              <p className="text-[11px] text-white/50">Permita o acesso à câmera para fotografar</p>
+            <div className="flex flex-col items-center gap-3 p-6 text-center text-[#F7F5F0] z-10 font-mono">
+              <span className="w-2 h-2 rounded-full bg-[#8C2D19] animate-ping" />
+              <p className="text-[12px] uppercase tracking-wider">Acessando sensor da câmera...</p>
+              <p className="text-[11px] text-[#A8A196]">Autorize a permissão no navegador</p>
             </div>
           )}
 
           {cameraStatus === "denied" && (
-            <div className="flex flex-col items-center gap-3.5 p-6 text-center text-white z-20 max-w-[280px]">
-              <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-2xl">
-                📷
+            <div className="flex flex-col items-center gap-3.5 p-6 text-center text-[#F7F5F0] z-20 max-w-[300px]">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-[#B46C20]">
+                Acesso Indisponível
               </div>
-              <div>
-                <p className="text-[14px] font-semibold">Câmera não disponível</p>
-                <p className="text-[11px] text-white/60 mt-0.5 leading-relaxed">
-                  Você pode abrir a câmera nativa do seu aparelho ou tentar novamente.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 w-full mt-1">
+              <p className="font-serif text-[15px] font-bold">
+                Câmera Direta Bloqueada
+              </p>
+              <p className="text-[12px] text-[#A8A196] leading-relaxed">
+                Você pode utilizar a captura fotográfica padrão do seu dispositivo ou escolher um arquivo da galeria.
+              </p>
+              <div className="flex flex-col gap-2 w-full mt-2">
                 <button
                   type="button"
                   onClick={() => nativeCameraInputRef.current?.click()}
-                  className="w-full py-2.5 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-[12px] font-semibold cursor-pointer shadow-lg"
+                  className="w-full py-2.5 bg-[#8C2D19] hover:bg-[#732414] text-[#F7F5F0] font-mono text-[11px] uppercase tracking-wider font-semibold cursor-pointer"
                 >
-                  📸 Abrir Câmera do Aparelho
+                  Acionar Câmera Nativa
                 </button>
                 <button
                   type="button"
                   onClick={startCamera}
-                  className="w-full py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-[12px] font-medium cursor-pointer"
+                  className="w-full py-2 border border-[#4D4740] bg-[#24211D] text-[#DCD5C9] font-mono text-[11px] uppercase tracking-wider cursor-pointer"
                 >
                   Tentar Novamente
                 </button>
@@ -330,116 +318,113 @@ export function CameraViewfinder({ onCapture, onBack, onSelectFromGallery }: Cam
           )}
         </div>
 
-        {/* Document Scanner Frame Guides Overlay */}
+        {/* Framing Guides Overlay */}
         <div className="absolute inset-0 flex items-center justify-center p-8 pointer-events-none z-20">
           <div className="relative w-full max-w-[300px] aspect-[0.707]">
-            {/* Corner alignment brackets */}
+            {/* Corner Alignment Marks */}
             {[
               "top-0 left-0",
               "top-0 right-0 rotate-90",
               "bottom-0 right-0 rotate-180",
               "bottom-0 left-0 -rotate-90",
             ].map((pos, i) => (
-              <div key={i} className={`absolute ${pos} w-8 h-8`}>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <div key={i} className={`absolute ${pos} w-7 h-7`}>
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                   <path
-                    d="M2 16V2H16"
-                    stroke={isLevel ? "#34D399" : "#60A5FA"}
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    className="transition-colors duration-500"
+                    d="M2 14V2H14"
+                    stroke={isLevel ? "#DCD5C9" : "#8C2D19"}
+                    strokeWidth="2"
+                    strokeLinecap="square"
                   />
                 </svg>
               </div>
             ))}
 
-            {/* Grid overlay */}
+            {/* Grid */}
             {grid && (
-              <div className="absolute inset-0 opacity-30">
+              <div className="absolute inset-0 opacity-25">
                 {[33, 66].map((p) => (
-                  <div key={`h${p}`} className="absolute w-full h-px bg-white/50" style={{ top: `${p}%` }} />
+                  <div key={`h${p}`} className="absolute w-full h-px bg-[#F7F5F0]" style={{ top: `${p}%` }} />
                 ))}
                 {[33, 66].map((p) => (
-                  <div key={`v${p}`} className="absolute h-full w-px bg-white/50" style={{ left: `${p}%` }} />
+                  <div key={`v${p}`} className="absolute h-full w-px bg-[#F7F5F0]" style={{ left: `${p}%` }} />
                 ))}
               </div>
             )}
-
-            {/* Dynamic laser scan line */}
-            <div
-              className="absolute left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-bounce opacity-60"
-              style={{ top: "45%", animationDuration: "2.4s" }}
-            />
           </div>
         </div>
 
         {/* Level Indicator */}
         <div className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none" style={{ top: "35%" }}>
           <div
-            className={`w-11 h-11 rounded-full border-2 flex items-center justify-center transition-colors duration-500 ${
-              isLevel ? "border-emerald-400" : "border-blue-400"
+            className={`w-9 h-9 border flex items-center justify-center transition-colors duration-300 ${
+              isLevel ? "border-[#DCD5C9]/80" : "border-[#8C2D19]/80"
             }`}
           >
             <div
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
-                isLevel ? "bg-emerald-400 scale-100" : "bg-blue-400 scale-75 translate-x-1 -translate-y-0.5"
+              className={`w-1.5 h-1.5 transition-all duration-300 ${
+                isLevel ? "bg-[#DCD5C9]" : "bg-[#8C2D19] translate-x-0.5"
               }`}
             />
           </div>
           {isLevel && (
             <div className="text-center mt-1">
-              <span className="text-[9px] text-emerald-400 font-semibold bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-xs">
-                Enquadramento Correto
+              <span className="text-[9px] font-mono uppercase tracking-widest text-[#DCD5C9] bg-[#141311]/80 px-2 py-0.5 border border-[#3D3833]">
+                Alinhamento Correto
               </span>
             </div>
           )}
         </div>
 
         {/* Bottom Shutter & Controls Bar */}
-        <div className="absolute bottom-0 left-0 right-0 z-30 pb-6 pt-8 px-6 bg-gradient-to-t from-black/95 via-black/60 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 z-30 pb-6 pt-6 px-6 bg-gradient-to-t from-[#141311] via-[#141311]/80 to-transparent">
           <div className="flex items-center justify-between mb-4">
-            {/* Gallery Picker Button */}
+            {/* Gallery Picker */}
             <button
               onClick={() => fileInputRef.current?.click()}
-              title="Escolher da Galeria"
-              className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 overflow-hidden flex items-center justify-center hover:bg-white/20 active:scale-95 transition-all cursor-pointer text-white"
+              title="Carregar da Galeria"
+              className="w-11 h-11 border border-[#4D4740] bg-[#24211D]/90 flex items-center justify-center hover:bg-[#332F2A] transition-colors cursor-pointer text-[#F7F5F0]"
             >
-              <span className="text-[18px]">🖼️</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" stroke="currentColor" strokeWidth="1.8" />
+                <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                <path d="M21 15l-5-5L5 21" stroke="currentColor" strokeWidth="1.8" />
+              </svg>
             </button>
 
-            {/* Big Shutter Capture Button */}
+            {/* Shutter Capture Button */}
             <button
               onClick={capturePhoto}
-              title="Capturar Foto da Página"
-              className="relative rounded-full active:scale-90 transition-transform cursor-pointer"
-              style={{ width: 72, height: 72 }}
+              title="Capturar Foto"
+              className="relative cursor-pointer group"
+              style={{ width: 68, height: 68 }}
             >
-              <div className="absolute inset-0 rounded-full border-4 border-white/60 shadow-lg shadow-black/50" />
-              <div className="absolute inset-2 rounded-full bg-white hover:bg-neutral-100 transition-colors shadow-inner flex items-center justify-center">
-                <div className="w-5 h-5 rounded-full border-2 border-neutral-300" />
+              <div className="absolute inset-0 border-2 border-[#DCD5C9] transition-transform group-active:scale-95" />
+              <div className="absolute inset-1.5 bg-[#F7F5F0] hover:bg-[#EFECE6] transition-colors flex items-center justify-center">
+                <div className="w-3 h-3 border border-[#1A1816]" />
               </div>
             </button>
 
-            {/* Grid Toggle Button */}
+            {/* Grid Toggle */}
             <button
               onClick={() => setGrid(!grid)}
               title="Alternar Grade"
-              className={`w-12 h-12 rounded-xl backdrop-blur-sm border flex items-center justify-center transition-colors cursor-pointer ${
-                grid ? "bg-white/25 border-white/50 text-white" : "bg-white/10 border-white/20 text-white"
+              className={`w-11 h-11 border flex items-center justify-center transition-colors cursor-pointer ${
+                grid ? "bg-[#332F2A] border-[#DCD5C9] text-[#F7F5F0]" : "border-[#4D4740] bg-[#24211D]/90 text-[#F7F5F0]"
               }`}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="1" stroke="white" strokeWidth="1.6" />
-                <path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke="white" strokeWidth="1.2" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="18" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke="currentColor" strokeWidth="1.2" />
               </svg>
             </button>
           </div>
 
           <button
             onClick={handleBack}
-            className="w-full py-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white text-[13px] font-medium hover:bg-white/20 transition-colors cursor-pointer"
+            className="w-full py-2 border border-[#4D4740] bg-[#24211D]/60 text-[#DCD5C9] font-mono text-[11px] uppercase tracking-wider hover:bg-[#24211D] transition-colors cursor-pointer"
           >
-            Cancelar
+            Cancelar Captura
           </button>
         </div>
 

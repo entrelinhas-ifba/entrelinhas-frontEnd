@@ -104,27 +104,19 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
 
         if (activeTarget.type === "corner") {
           const idx = activeTarget.index;
-          // Constrain corner drag with minimum distances
           let newX = current.x;
           let newY = current.y;
 
-          // Corner 0: Top-Left
           if (idx === 0) {
             newX = Math.min(newX, next[1].x - 10);
             newY = Math.min(newY, next[3].y - 10);
-          }
-          // Corner 1: Top-Right
-          else if (idx === 1) {
+          } else if (idx === 1) {
             newX = Math.max(newX, next[0].x + 10);
             newY = Math.min(newY, next[2].y - 10);
-          }
-          // Corner 2: Bottom-Right
-          else if (idx === 2) {
+          } else if (idx === 2) {
             newX = Math.max(newX, next[3].x + 10);
             newY = Math.max(newY, next[1].y + 10);
-          }
-          // Corner 3: Bottom-Left
-          else if (idx === 3) {
+          } else if (idx === 3) {
             newX = Math.min(newX, next[2].x - 10);
             newY = Math.max(newY, next[0].y + 10);
           }
@@ -157,7 +149,6 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
             next[2].x = startCorners[2].x + (newX - startCorners[1].x);
           }
         } else if (activeTarget.type === "all") {
-          // Drag whole box
           const minX = Math.min(...startCorners.map((c) => c.x));
           const maxX = Math.max(...startCorners.map((c) => c.x));
           const minY = Math.min(...startCorners.map((c) => c.y));
@@ -215,7 +206,6 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
             return;
           }
 
-          // Calculate bounds of crop in percent
           const xs = corners.map((c) => c.x);
           const ys = corners.map((c) => c.y);
           const minXPercent = Math.max(0, Math.min(...xs)) / 100;
@@ -223,7 +213,6 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
           const minYPercent = Math.max(0, Math.min(...ys)) / 100;
           const maxYPercent = Math.min(100, Math.max(...ys)) / 100;
 
-          // First draw rotated/filtered base image to an intermediate canvas
           const isRotated90 = rotation % 180 !== 0;
           const baseW = isRotated90 ? img.naturalHeight : img.naturalWidth;
           const baseH = isRotated90 ? img.naturalWidth : img.naturalHeight;
@@ -246,7 +235,6 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
           baseCtx.rotate((rotation * Math.PI) / 180);
           baseCtx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
 
-          // Now crop the selected quadrilateral bounding box
           const cropX = Math.round(minXPercent * baseW);
           const cropY = Math.round(minYPercent * baseH);
           const cropW = Math.max(40, Math.round((maxXPercent - minXPercent) * baseW));
@@ -282,7 +270,6 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
     }
   };
 
-  // Midpoints for edge handles
   const edgeMidpoints = {
     top: { x: (corners[0].x + corners[1].x) / 2, y: (corners[0].y + corners[1].y) / 2 },
     right: { x: (corners[1].x + corners[2].x) / 2, y: (corners[1].y + corners[2].y) / 2 },
@@ -298,63 +285,62 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-0 sm:p-4 select-none">
-      <div className="w-full h-full sm:h-auto sm:max-w-md sm:aspect-[3/4.2] bg-[#141414] sm:rounded-3xl overflow-hidden relative flex flex-col shadow-2xl border border-white/10">
+    <div className="fixed inset-0 z-50 bg-[#141311] flex items-center justify-center p-0 sm:p-4 select-none">
+      <div className="w-full h-full sm:h-auto sm:max-w-md sm:aspect-[3/4.2] bg-[#1A1816] sm:border sm:border-[#3D3833] overflow-hidden relative flex flex-col shadow-2xl">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-white/10 bg-[#1A1A1A]/90 backdrop-blur-sm z-30">
+        <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-[#3D3833] bg-[#24211D]/90 backdrop-blur-sm z-30">
           <button
             onClick={onBack}
-            className="text-[13px] text-white/80 hover:text-white font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider text-[#DCD5C9] hover:text-[#F7F5F0] border border-[#4D4740] bg-[#1A1816] transition-colors cursor-pointer"
           >
-            <span>←</span> Voltar
+            ← Voltar
           </button>
           <div className="text-center">
-            <p className="text-[14px] font-semibold text-white">Ajustar Bordas</p>
-            <p className="text-[10px] text-blue-400 font-medium">
+            <p className="font-serif text-[14px] font-bold text-[#F7F5F0]">Enquadrar Margens</p>
+            <p className="font-mono text-[9px] uppercase tracking-widest text-[#B46C20]">
               {activeTarget
                 ? activeTarget.type === "corner"
-                  ? `Ajustando ${cornerLabels[activeTarget.index]}`
+                  ? `Canto: ${cornerLabels[activeTarget.index]}`
                   : activeTarget.type === "edge"
-                  ? `Ajustando Borda ${activeTarget.edge}`
-                  : "Movendo seleção"
-                : "Arraste os cantos ou bordas para recortar"}
+                  ? `Borda: ${activeTarget.edge}`
+                  : "Reposicionando seleção"
+                : "Ajuste os vértices da página"}
             </p>
           </div>
           <button
             onClick={handleReset}
             title="Redefinir ajustes"
-            className="text-[12px] text-white/60 hover:text-white transition-colors cursor-pointer"
+            className="text-[11px] font-mono uppercase text-[#A8A196] hover:text-[#F7F5F0] transition-colors cursor-pointer"
           >
-            Redefinir
+            Restaurar
           </button>
         </div>
 
-        {/* Quick presets toolbar */}
-        <div className="flex items-center justify-center gap-2 py-2 px-4 bg-[#181818] border-b border-white/5 z-20">
+        {/* Quick Presets Toolbar */}
+        <div className="flex items-center justify-center gap-2 py-2 px-4 bg-[#1E1B18] border-b border-[#3D3833] z-20">
           <button
             onClick={handleAutoAdjust}
-            className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white/90 text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1"
+            className="px-3 py-1 bg-[#282420] border border-[#4D4740] hover:bg-[#332F2A] text-[#DCD5C9] font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer"
           >
-            <span>⚡</span> Auto-Ajustar
+            [ Auto-Enquadrar ]
           </button>
           <button
             onClick={handleExpandFull}
-            className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white/90 text-[11px] font-medium transition-colors cursor-pointer flex items-center gap-1"
+            className="px-3 py-1 bg-[#282420] border border-[#4D4740] hover:bg-[#332F2A] text-[#DCD5C9] font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer"
           >
-            <span>🔲</span> Tela Inteira
+            [ Página Completa ]
           </button>
         </div>
 
         {/* Interactive Cropper Canvas */}
-        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden bg-neutral-950/60">
+        <div className="flex-1 flex items-center justify-center p-4 relative overflow-hidden bg-[#141311]">
           <div
             ref={containerRef}
-            className="relative w-full max-w-[290px] sm:max-w-[320px] aspect-[0.707] bg-[#222222] rounded-xl overflow-hidden shadow-2xl border border-white/15 touch-none"
+            className="relative w-full max-w-[290px] sm:max-w-[320px] aspect-[0.707] bg-[#1A1816] border border-[#4D4740] overflow-hidden shadow-2xl touch-none"
             style={{ touchAction: "none" }}
           >
-            {/* Display Real Image or Simulated Page */}
             {imageSrc ? (
-              <div className="absolute inset-0 flex items-center justify-center p-2 bg-[#1A1A1A] overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center p-2 bg-[#1A1816] overflow-hidden">
                 <img
                   src={imageSrc}
                   alt="Página para recorte"
@@ -367,7 +353,7 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
               </div>
             ) : (
               <div
-                className={`absolute inset-0 ${grayscale ? "bg-neutral-200" : "bg-[#FBF9F5]"} flex flex-col px-6 pt-8 gap-2.5`}
+                className={`absolute inset-0 ${grayscale ? "bg-neutral-300" : "bg-[#F7F5F0]"} flex flex-col px-6 pt-8 gap-2.5`}
                 style={{
                   filter: grayscale ? "grayscale(100%)" : "none",
                   transform: `rotate(${rotation}deg)`,
@@ -376,42 +362,40 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                 {Array.from({ length: 18 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-[6px] rounded-full bg-[#D4D0C8]"
+                    className="h-[5px] bg-[#DCD5C9]"
                     style={{ width: `${70 + Math.sin(i * 0.8) * 20}%` }}
                   />
                 ))}
               </div>
             )}
 
-            {/* SVG Overlay: Darkened area outside crop, outline, grid */}
+            {/* SVG Mask and Outlines */}
             <svg
               className="absolute inset-0 w-full h-full pointer-events-none"
               viewBox="0 0 100 100"
               preserveAspectRatio="none"
             >
-              {/* Darkened mask outside crop box */}
               <path
                 d={`M 0 0 L 100 0 L 100 100 L 0 100 Z M ${corners[0].x} ${corners[0].y} L ${corners[1].x} ${corners[1].y} L ${corners[2].x} ${corners[2].y} L ${corners[3].x} ${corners[3].y} Z`}
-                fill="rgba(0, 0, 0, 0.65)"
+                fill="rgba(20, 19, 17, 0.72)"
                 fillRule="evenodd"
               />
 
-              {/* Blue border line around crop quadrilateral */}
               <polygon
                 points={corners.map((c) => `${c.x},${c.y}`).join(" ")}
                 fill="transparent"
-                stroke="#3B82F6"
-                strokeWidth="1"
+                stroke="#8C2D19"
+                strokeWidth="0.9"
               />
 
-              {/* Rule of thirds grid lines inside crop */}
+              {/* Grid rules */}
               <line
                 x1={corners[0].x + (corners[3].x - corners[0].x) / 3}
                 y1={corners[0].y + (corners[3].y - corners[0].y) / 3}
                 x2={corners[1].x + (corners[2].x - corners[1].x) / 3}
                 y2={corners[1].y + (corners[2].y - corners[1].y) / 3}
-                stroke="rgba(255, 255, 255, 0.35)"
-                strokeWidth="0.4"
+                stroke="rgba(247, 245, 240, 0.3)"
+                strokeWidth="0.35"
                 strokeDasharray="1.5 1.5"
               />
               <line
@@ -419,8 +403,8 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                 y1={corners[0].y + ((corners[3].y - corners[0].y) * 2) / 3}
                 x2={corners[1].x + ((corners[2].x - corners[1].x) * 2) / 3}
                 y2={corners[1].y + ((corners[2].y - corners[1].y) * 2) / 3}
-                stroke="rgba(255, 255, 255, 0.35)"
-                strokeWidth="0.4"
+                stroke="rgba(247, 245, 240, 0.3)"
+                strokeWidth="0.35"
                 strokeDasharray="1.5 1.5"
               />
               <line
@@ -428,8 +412,8 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                 y1={corners[0].y + (corners[1].y - corners[0].y) / 3}
                 x2={corners[3].x + (corners[2].x - corners[3].x) / 3}
                 y2={corners[3].y + (corners[2].y - corners[3].y) / 3}
-                stroke="rgba(255, 255, 255, 0.35)"
-                strokeWidth="0.4"
+                stroke="rgba(247, 245, 240, 0.3)"
+                strokeWidth="0.35"
                 strokeDasharray="1.5 1.5"
               />
               <line
@@ -437,23 +421,23 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                 y1={corners[0].y + ((corners[1].y - corners[0].y) * 2) / 3}
                 x2={corners[3].x + ((corners[2].x - corners[3].x) * 2) / 3}
                 y2={corners[3].y + ((corners[2].y - corners[3].y) * 2) / 3}
-                stroke="rgba(255, 255, 255, 0.35)"
-                strokeWidth="0.4"
+                stroke="rgba(247, 245, 240, 0.3)"
+                strokeWidth="0.35"
                 strokeDasharray="1.5 1.5"
               />
             </svg>
 
-            {/* Center Drag Zone: Moves the entire crop box */}
+            {/* Center Drag Zone */}
             <div
               onPointerDown={(e) => handlePointerDown(e, { type: "all" })}
               className="absolute inset-0 cursor-move"
               style={{
                 clipPath: `polygon(${corners.map((c) => `${c.x}% ${c.y}%`).join(", ")})`,
               }}
-              title="Arraste para mover o recorte inteiro"
+              title="Mover enquadramento"
             />
 
-            {/* Edge Midpoint Handles (Drag Top/Bottom/Left/Right edge) */}
+            {/* Edge Handles */}
             {(["top", "right", "bottom", "left"] as const).map((edge) => {
               const pt = edgeMidpoints[edge];
               const isHorizontal = edge === "top" || edge === "bottom";
@@ -473,7 +457,7 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                   title={`Ajustar borda ${edge}`}
                 >
                   <div
-                    className={`rounded-full bg-white/80 border border-[#1D4ED8] shadow-sm ${
+                    className={`bg-[#F7F5F0] border border-[#8C2D19] ${
                       isHorizontal ? "w-4 h-1.5" : "w-1.5 h-4"
                     }`}
                   />
@@ -496,28 +480,26 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                   style={{
                     left: `${c.x}%`,
                     top: `${c.y}%`,
-                    width: 42,
-                    height: 42,
+                    width: 38,
+                    height: 38,
                   }}
-                  title={`Ajustar canto ${cornerLabels[i]}`}
+                  title={`Ajustar ${cornerLabels[i]}`}
                 >
-                  {/* Outer halo / touch area */}
                   <div
-                    className={`rounded-full flex items-center justify-center transition-transform ${
+                    className={`flex items-center justify-center transition-transform ${
                       isActive ? "scale-125" : "hover:scale-110"
                     }`}
-                    style={{ width: 26, height: 26 }}
+                    style={{ width: 22, height: 22 }}
                   >
-                    {/* Inner pin button */}
-                    <div className="w-5 h-5 rounded-full bg-white border-2 border-[#1D4ED8] shadow-lg shadow-blue-900/50 flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8]" />
+                    <div className="w-4 h-4 bg-[#F7F5F0] border-2 border-[#8C2D19] shadow-md flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 bg-[#8C2D19]" />
                     </div>
                   </div>
                 </div>
               );
             })}
 
-            {/* Magnifier Loupe when dragging a corner */}
+            {/* Magnifier Loupe */}
             {activeTarget?.type === "corner" && imageSrc && (
               <div
                 className="absolute z-40 pointer-events-none -translate-x-1/2 -translate-y-full mb-3"
@@ -526,7 +508,7 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                   top: `${Math.max(15, corners[activeTarget.index].y)}%`,
                 }}
               >
-                <div className="w-20 h-20 rounded-full border-2 border-white shadow-2xl overflow-hidden bg-neutral-900 relative ring-2 ring-blue-500/50">
+                <div className="w-20 h-20 border-2 border-[#8C2D19] shadow-2xl overflow-hidden bg-[#141311] relative">
                   <img
                     src={imageSrc}
                     alt="Zoom da borda"
@@ -537,11 +519,9 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
                       filter: grayscale ? "grayscale(100%) contrast(1.15)" : "none",
                     }}
                   />
-                  {/* Crosshair in loupe center */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-full h-px bg-blue-400/80" />
-                    <div className="h-full w-px bg-blue-400/80 absolute" />
-                    <div className="w-2 h-2 rounded-full border border-white bg-blue-500/40 absolute" />
+                    <div className="w-full h-px bg-[#8C2D19]" />
+                    <div className="h-full w-px bg-[#8C2D19] absolute" />
                   </div>
                 </div>
               </div>
@@ -550,41 +530,35 @@ export function CropAdjuster({ imageSrc, onConfirm, onBack }: CropAdjusterProps)
         </div>
 
         {/* Action Controls */}
-        <div className="px-5 pb-5 pt-3 flex flex-col gap-2.5 bg-[#1A1A1A]/95 border-t border-white/10 z-30">
+        <div className="px-5 pb-5 pt-3 flex flex-col gap-2.5 bg-[#1E1B18] border-t border-[#3D3833] z-30">
           <div className="flex gap-2">
             <button
               onClick={handleRotate}
-              className="flex-1 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-[12px] font-medium flex items-center justify-center gap-1.5 hover:bg-white/15 active:scale-95 transition-all cursor-pointer"
+              className="flex-1 py-2.5 border border-[#4D4740] bg-[#282420] text-[#DCD5C9] font-mono text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-[#332F2A] transition-colors cursor-pointer"
             >
-              🔄 Girar {rotation > 0 ? `(${rotation}°)` : "90°"}
+              Girar 90° {rotation > 0 ? `(${rotation}°)` : ""}
             </button>
             <button
               onClick={() => setGrayscale(!grayscale)}
-              className={`flex-1 py-2.5 rounded-xl border text-[12px] font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+              className={`flex-1 py-2.5 border font-mono text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                 grayscale
-                  ? "bg-white/20 border-white/40 text-white font-semibold"
-                  : "bg-white/10 border-white/20 text-white hover:bg-white/15"
+                  ? "bg-[#332F2A] border-[#DCD5C9] text-[#F7F5F0] font-semibold"
+                  : "border-[#4D4740] bg-[#282420] text-[#DCD5C9] hover:bg-[#332F2A]"
               }`}
             >
-              ⚖️ {grayscale ? "Original (Cores)" : "Tons de Cinza"}
+              {grayscale ? "Cores Originais" : "Tons de Cinza / PB"}
             </button>
           </div>
 
           <button
             onClick={handleConfirmCrop}
             disabled={isProcessing}
-            className="w-full py-3.5 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] disabled:opacity-60 text-white text-[14px] font-semibold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/30 active:opacity-90 transition-all cursor-pointer"
+            className="w-full py-3 bg-[#8C2D19] hover:bg-[#732414] disabled:opacity-60 text-[#F7F5F0] font-mono text-[12px] uppercase tracking-wider font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-xs"
           >
             {isProcessing ? (
-              <>
-                <span className="animate-spin inline-block">⏳</span>
-                <span>Processando Recorte...</span>
-              </>
+              <span>Processando Recorte...</span>
             ) : (
-              <>
-                <span>✓</span>
-                <span>Confirmar e Processar</span>
-              </>
+              <span>Confirmar Enquadramento</span>
             )}
           </button>
         </div>

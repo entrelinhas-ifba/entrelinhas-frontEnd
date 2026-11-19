@@ -24,6 +24,7 @@ export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialLoading: boolean;
   loginWithEmail: (credentials: LoginCredentials) => Promise<void>;
   registerWithEmail: (credentials: RegisterCredentials) => Promise<void>;
   loginWithGoogle: (customUser?: { name: string; email: string; avatarUrl?: string }) => Promise<void>;

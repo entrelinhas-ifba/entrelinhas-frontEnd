@@ -14,7 +14,7 @@ import { HistoryList } from "@/features/history";
 import { AuthProvider, useAuth, LoginScreen } from "@/features/auth";
 
 function AppContent() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isInitialLoading } = useAuth();
   const [navTab, setNavTab] = useState<NavTab>("home");
   const [screen, setScreen] = useState<Screen>("home");
   const [mode, setMode] = useState<AnalysisMode>("rapida");
@@ -47,14 +47,16 @@ function AppContent() {
   // If user opens the app not authenticated and has not chosen to dismiss, show LoginScreen
   const shouldShowLogin = (!isAuthenticated && !hasDismissedInitialLogin) || screen === "login";
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return (
-      <div className="min-h-screen w-full bg-[#FBFBFA] flex flex-col items-center justify-center p-4">
-        <div className="w-24 h-24 rounded-3xl bg-white p-3 border border-blue-100 shadow-md ring-8 ring-blue-50/70 flex items-center justify-center mb-5 animate-pulse">
-          <img src="/logo.jpg" alt="EntreLinhas" className="w-full h-full object-contain rounded-2xl" />
+      <div className="min-h-screen w-full bg-[#F7F5F0] flex flex-col items-center justify-center p-6 text-center selection:bg-[#F0DEB4]">
+        <div className="w-28 h-28 bg-[#FDFCF9] p-2 border border-[#DCD5C9] shadow-xs flex items-center justify-center mb-5">
+          <img src="/logo.jpg" alt="EntreLinhas" className="w-full h-full object-contain" />
         </div>
-        <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-        <p className="text-xs text-gray-500 mt-3 font-medium">Carregando EntreLinhas...</p>
+        <div className="flex items-center justify-center gap-2 text-[11px] font-mono uppercase tracking-widest text-[#7D7567]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#8C2D19] animate-pulse" />
+          <span>Consultando acervo...</span>
+        </div>
       </div>
     );
   }
@@ -77,11 +79,8 @@ function AppContent() {
   const showNav = screen !== "camera" && screen !== "crop";
 
   return (
-    <div
-      className="min-h-screen w-full bg-[#FBFBFA] flex flex-col text-[#1F2421]"
-      style={{ fontFamily: "Inter, system-ui, sans-serif" }}
-    >
-      {/* Top Header with Uploaded Logo and Auth controls */}
+    <div className="min-h-screen w-full bg-[#F7F5F0] flex flex-col text-[#1A1816] font-sans antialiased selection:bg-[#F0DEB4] selection:text-[#1A1816]">
+      {/* Top Header with Editorial Masthead and Auth controls */}
       {showNav && (
         <AppHeader
           activeTab={navTab}
@@ -91,7 +90,7 @@ function AppContent() {
       )}
 
       {/* Main Content Area */}
-      <main className={`flex-1 flex flex-col ${showNav ? "pb-20 md:pb-8" : ""}`}>
+      <main className={`flex-1 flex flex-col ${showNav ? "pb-24 md:pb-12" : ""}`}>
         {screen === "camera" ? (
           <CameraViewfinder
             onCapture={handleCameraCapture}
